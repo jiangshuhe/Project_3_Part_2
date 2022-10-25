@@ -92,7 +92,7 @@
 
                   
 
-  d3.csv("monthlyAQI.csv", function(data){
+  d3.csv("https://raw.githubusercontent.com/jiangshuhe/Project_3_Part_2/main/monthlyAQI.csv", function(data){
   
               measure_scale.domain([0,d3.max(data, function(d) {
                   return +d[field];
