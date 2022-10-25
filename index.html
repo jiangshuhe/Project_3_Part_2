@@ -1,18 +1,259 @@
-<!DOCTYPE html>
-<html lang="en">
+  <!-- transform the scale -->
+  
+  
+  <!DOCTYPE html>
+  <html>
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>D3 Visualization Application</title>
-  </head>
-  <body>
-    <h1>Data Visualization</h1>
-    <p>
-      This example D3 chart shows the count of each weather type in a sample
-      weather dataset.
-    </p>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
-</html>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.12/d3.min.js"></script>
+      <style>
+        body {
+          font-family: futura;
+        }
+        h1.title {
+          color: black;
+          text-align: center;
+        }
+        .axis {
+          font-family: arial;
+          font-size: 0.7em;
+        }
+        text {
+          fill: black;
+          stroke: none;
+        }
+        .label {
+          font-size: 2em;
+        }
+        path {
+          fill: none;
+          stroke: black;
+          stroke-width: 2px;
+        }
+        .tick {
+          fill: none;
+          stroke: black;
+        }
+        .bar {
+          opacity: 0.75;
+          stroke: none;
+        }
+        form {
+  
+        text-align: center;
+        }
+      </style>
+  
+  
+  
+  
+  
+  
+  
+  
+      <script type="text/javascript">
+        </script>
+    </head>
+    <body>
+      <h1 class="title">
+        Monthly AQI in Pittsburgh Area
+      </h1>
+      <form>
+        <label><input type="radio" name="statistic" value="max"> Max</label>
+        <label><input type="radio" name="statistic" value="Q90"> 90th Quantile</label>
+        <label><input type="radio" name="statistic" value="Q75"> 75th Quantile</label>
+        <label><input type="radio" name="statistic" value="medians" checked> Median</label>
+        <label><input type="radio" name="statistic" value="Q25"> 25th Quantile</label>
+        <label><input type="radio" name="statistic" value="Q10"> 10th Quantile</label>
+    </form>
+      <script type="text/javascript">
+  
+          field = 'medians'; 
+  
+          var margin = {top: 25, right: 80, bottom: 200, left: 75};
+          var width = 960 - margin.left - margin.right;
+          var height = 600 - margin.top - margin.bottom;
+          var barPadding = 30;
+          
+          var svg = d3.select("body")
+                      .append("svg")
+                          .attr("width", width + margin.left + margin.right)
+                          .attr("height", height + margin.top + margin.bottom)
+                      .append('g')
+                          .attr('class','chart')
+                          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  
+          var format = d3.time.format("%b");
+  
+          var measure_scale = d3.scale.linear()
+                  .range([height, 0]);
+  
+  
+
+                  
+
+  d3.csv("monthlyAQI.csv", function(data){
+  
+              measure_scale.domain([0,d3.max(data, function(d) {
+                  return +d[field];
+              })]);
+  
+              var time_extent = d3.extent(data, function(d){
+                  return format.parse(d['month']);
+              });
+  
+              var time_scale = d3.time.scale()
+                  .range([0, width])
+                  .domain(time_extent);
+  
+              var time_axis = d3.svg.axis()
+                  .scale(time_scale)
+                  .tickFormat(d3.time.format("%b"));
+  
+              measure_axis = d3.svg.axis()
+                  .scale(measure_scale)
+                  .orient("left");
+  
+  
+              svg.append('g')
+                  .attr('class', 'x axis')
+                  .attr('transform', "translate(0," + height + ")")
+                  .call(time_axis);
+  
+  
+              svg.append('g')
+                  .attr('class', 'y axis')
+                  .call(measure_axis);
+  
+  
+              var y_label = d3.select(".y.axis")
+                  .append("text")
+                  .attr('class', 'label')
+                  .text("Air Quality Index")
+                  .style('font-size', '1.2em')
+                  .attr("transform", "rotate(-90)");
+        
+              y_label.attr("x", -(height / 2)).attr('y', -40)
+                .style("text-anchor", "middle");
+          
+  
+    
+          var gradient = d3.select('body').select('svg').append("svg:defs")
+            .append("svg:linearGradient")
+            .attr("id", "gradient")
+            .attr("gradientUnits", "userSpaceOnUse")
+            .attr("x1", 0).attr("y1", measure_scale(300))
+            .attr("x2", 0).attr("y2", measure_scale(0))     
+            .attr("spreadMethod", "pad");
+  
+  
+          gradient.append("svg:stop")
+            .attr("offset", "40%")
+            .attr("stop-color", "maroon")
+            .attr("stop-opacity", 1);
+            
+          gradient.append("svg:stop")
+            .attr("offset", "60%")
+            .attr("stop-color", "purple")
+            .attr("stop-opacity", 1);   
+  
+          gradient.append("svg:stop")
+            .attr("offset", "70%")
+            .attr("stop-color", "red")
+            .attr("stop-opacity", 1);
+  
+          gradient.append("svg:stop")
+            .attr("offset", "80%")
+            .attr("stop-color", "orange")
+            .attr("stop-opacity", 1);
+
+          gradient.append("svg:stop")
+            .attr("offset", "90%")
+            .attr("stop-color", "yellow")
+            .attr("stop-opacity", 1);
+
+          gradient.append("svg:stop")
+            .attr("offset", "100%")
+            .attr("stop-color", "green")
+            .attr("stop-opacity", 1);
+  
+  
+            svg.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                  .attr('class', 'bar')
+  
+              d3.selectAll('.bar')
+                  .attr('x', function(d) {
+                      return time_scale(format.parse(d['month']));
+                  })
+                  .attr('width', function(d) {
+                      return width / data.length - barPadding;
+                  })
+                  .attr('y', function(d) {
+                      return measure_scale(+d[field]);
+                  })
+                  .attr('height', function(d) {
+                      return height - measure_scale(+d[field]);
+                  })
+                  .style("fill", "url(#gradient)")
+                  ;
+           d3.selectAll('input').on('change', change);
+  
+           var legend = svg.selectAll('.legend')
+             .data([['green','Good'],['yellow','Moderate'],['orange','Unhealthy for Sensitive Grp.'],['red','Unhealthy'],['purple','Very Unhealthy'],['maroon','Hazardous']])
+             .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(" + i * 158 + ",0)"; });
+  
+  
+             legend.append('rect').attr('x',0).attr('y',420)
+             .attr('width',18).attr('height',18).style('fill',function(d){return d[0]});
+  
+             legend.append("text")
+          .attr("x", 0)
+          .attr("y", 460)
+          .attr("dy", ".35em")
+          .style("text-anchor", "middle")
+          .html(function(d) { return d[1]; });
+  
+  
+    
+  function change(){
+  
+    oldfield = field
+  
+    field = this.value;
+    measure_scale.domain([0,d3.max(data, function(d) {
+      return +d[field];
+      })]);
+    var t0 =d3.select('svg').transition().duration(800);
+    t0.selectAll(".y.axis").call(measure_axis);
+    t0.selectAll('.bar').attr('y', function(d) {
+                      return measure_scale(+d[oldfield]);
+                  })
+                  .attr('height', function(d) {
+                      return height - measure_scale(+d[oldfield]);
+                  });
+      var t1 = t0.transition();
+    t1.select("lineargradient").attr("y1", measure_scale(650)).attr("y2", measure_scale(0));
+    t1.selectAll('.bar').attr('y', function(d) {
+                      return measure_scale(+d[field]);
+                  })
+                  .attr('height', function(d) {
+                      return height - measure_scale(+d[field]);
+                  });
+  };
+  
+  });
+  
+  
+  
+  
+  
+  
+  
+      </script>
+    </body>
+  </html>

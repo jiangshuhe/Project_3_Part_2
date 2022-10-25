@@ -1,32 +1,31 @@
-# D3-App-Template
+# Assignment 3: Interactive Data Visualization
 
-A template for an interactive web application with D3.
+## Part 1
 
-## Launch the app
 
-Install [node](https://nodejs.org/en/).
+## Part 2
 
-```bash
-npm install
-npm run dev
-```
+### Exploratory Visual Analysis
+Based on Assignment 2, we additionally did an analysis of the main pollutants in each city using D3. From the interactive bar chart below we can see that the main pollutant for each city is basically PM2.5.
 
-This launches the app in developer mode. To run the app in production mode, run `npm run build` or see below.
+[Interactive Bar Chart: Main Pollutants by City](http://127.0.0.1:5176/assignment-3-qu-jiang/)
 
-## Code style
 
-We recomme dusing VSCode for development. You can run `npm run lint` to check for linting errors.
-Note that these tests automatically run when you comit your code to GitHub. See `test.yml` for details.
-You can fix a lot of issues autoamtically with `npm run format`.
+### Question
+After the exploratory analysis, we would like to work on the following question.
+
+Is there a certain monthly pattern of the AQI changes in the Pittsburgh area?
+
+### The visualization Answering the Question
+First, we processed the dataset in Python and calculated the statistical values of the air quality index in the Pittsburgh area for each month. Then we plotted the following interactive bar chart using D3.
+
+[Interactive Bar Chart: Monthly AQI in Pittsburgh Area](http://172.26.59.126:8082/)
+
+
+## Overview of the Development Process
+For this assignment, our team divided the work into parts, Shuhe was mainly responsible for part 1 and Junmo was mainly responsible for part 2 and the report. But we also met regularly to keep track of each other's progress and to help each other. Since none of us had been exposed to Java and JavaScript before, we spent a relatively large amount of time on this assignment, about 20h per person. It did prove to be a challenging development process for us, and the most time-consuming part was understanding the entire framework structure. We spent a lot of time learning the bar chart in the template and only after we fully understood it did we commit to the line chart drawing. After completing this assignment, we had a deep feeling that we need more practice to become proficient in the D3 language.
 
 ## Deployment
 
-When you push to GitHub, the app automatically deploys to GitHub Pages. As an example, this template repository is deployed at [domoritz.github.io/D3-App-Template](https://domoritz.github.io/D3-App-Template/). See `deploy.yml` for details. Make sure to update the `base` property in `vite.config.ts` to match your repo name.
+When you push to GitHub, the app automatically deploys to GitHub Pages. As an example, this template repository is deployed at [jiangshuhe.github.io/Project_3_Part_2](https://jiangshuhe.github.io/Project_3_Part_2/). See `deploy.yml` for details. Make sure to update the `base` property in `vite.config.ts` to match your repo name.
 
-## Notes
-
-- Uses [Vite](https://vitejs.dev/)
-- Bootstrapped with `npx create vite app --template vanilla-ts`
-- Uses [D3](https://d3js.org/)
-- Built with [TypeScript](https://www.typescriptlang.org/)
-- Supports [DuckDB-wasm](https://github.com/duckdb/duckdb-wasm)
